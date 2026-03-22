@@ -29,7 +29,7 @@ async function cargarProductos() {
   const key = typeof window.SUPABASE_ANON_KEY === 'string' ? window.SUPABASE_ANON_KEY.trim() : '';
   if (!base || !key) {
     catalogError =
-      'Configura SUPABASE_URL y SUPABASE_ANON_KEY en supabase-config.js (Supabase → Project Settings → API).';
+      'errorsupabase.';
     productos = [];
     return;
   }
