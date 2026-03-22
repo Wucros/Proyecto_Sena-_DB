@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GameHub — Consolas y Videojuegos</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="logo">
+      <span class="logo-icon">▶</span>
+      GameHub
+    </a>
+    <nav class="nav">
+      <a href="#inicio" class="nav-link active">Inicio</a>
+      <a href="#productos" class="nav-link">Consolas</a>
+      <a href="#juegos" class="nav-link">Juegos</a>
+      <a href="#ofertas" class="nav-link">Ofertas</a>
+    </nav>
+    <div class="header-actions">
+      <button type="button" class="btn-cart" id="btnCart" aria-label="Ver carrito">
+        <span class="cart-icon">🛒</span>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button type="button" class="btn-menu" id="btnMenu" aria-label="Menú">☰</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="inicio">
+      <div class="hero-content">
+        <h1>Tu tienda de <span class="highlight">consolas</span> y <span class="highlight">videojuegos</span></h1>
+        <p>Las últimas consolas y los mejores títulos. Envío rápido y garantía oficial.</p>
+        <a href="#productos" class="btn btn-primary">Ver catálogo</a>
+      </div>
+      <div class="hero-bg"></div>
+    </section>
+
+    <section class="filters" id="productos">
+      <h2 class="section-title">Catálogo</h2>
+      <div class="filter-buttons">
+        <button type="button" class="filter-btn active" data-filter="todos">Todos</button>
+        <button type="button" class="filter-btn" data-filter="consola">Consolas</button>
+        <button type="button" class="filter-btn" data-filter="juego">Videojuegos</button>
+      </div>
+      <div class="filter-platform" id="filterPlatform">
+        <span class="filter-platform-label">Plataforma:</span>
+        <div class="filter-buttons filter-buttons--platform">
+          <button type="button" class="filter-btn filter-btn--sm active" data-platform="todos">Todas</button>
+          <button type="button" class="filter-btn filter-btn--sm" data-platform="playstation">PlayStation</button>
+          <button type="button" class="filter-btn filter-btn--sm" data-platform="xbox">Xbox</button>
+          <button type="button" class="filter-btn filter-btn--sm" data-platform="nintendo">Nintendo</button>
+          <button type="button" class="filter-btn filter-btn--sm" data-platform="pc">PC</button>
+        </div>
+      </div>
+      <div class="search-box">
+        <input type="search" id="searchInput" placeholder="Buscar producto..." class="search-input" aria-label="Buscar">
+      </div>
+    </section>
+
+    <section class="products-grid" id="productsGrid">
+      <!-- Productos se insertan con JavaScript -->
+    </section>
+  </main>
+
+  <aside class="cart-sidebar" id="cartSidebar" aria-hidden="true">
+    <div class="cart-header">
+      <h2>Tu carrito</h2>
+      <button type="button" class="btn-close" id="btnCloseCart" aria-label="Cerrar carrito">&times;</button>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <p class="cart-empty" id="cartEmpty">El carrito está vacío</p>
+    </div>
+    <div class="cart-footer" id="cartFooter" hidden>
+      <p class="cart-total">Total: <strong id="cartTotal">$ 0</strong></p>
+      <button type="button" class="btn btn-primary btn-checkout" id="btnCheckout">Finalizar compra</button>
+    </div>
+  </aside>
+  <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <p>© 2025 GameHub. Consolas y videojuegos.</p>
+      <nav class="footer-nav">
+        <a href="#">Aviso legal</a>
+        <a href="#">Privacidad</a>
+        <a href="#">Contacto</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="supabase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
