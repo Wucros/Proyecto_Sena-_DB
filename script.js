@@ -1,4 +1,4 @@
-/* ===== Datos de productos (Supabase REST) ===== */
+
 const NOMBRES_PLATAFORMA = {
   playstation: 'PlayStation',
   xbox: 'Xbox',
@@ -49,13 +49,12 @@ async function cargarProductos() {
   productos = Array.isArray(rows) ? rows.map(mapProductoRow) : [];
 }
 
-/* ===== Estado ===== */
 let carrito = [];
 let filtroActual = 'todos';
 let filtroPlataforma = 'todos';
 let textoBusqueda = '';
 
-/* ===== DOM ===== */
+
 const productsGrid = document.getElementById('productsGrid');
 const cartCount = document.getElementById('cartCount');
 const cartSidebar = document.getElementById('cartSidebar');
@@ -70,7 +69,7 @@ const btnCheckout = document.getElementById('btnCheckout');
 const btnMenu = document.getElementById('btnMenu');
 const searchInput = document.getElementById('searchInput');
 
-/* ===== Formatear precio (COP - pesos colombianos) ===== */
+
 function formatoPrecio(num) {
   return new Intl.NumberFormat('es-CO', {
     style: 'currency',
@@ -80,7 +79,7 @@ function formatoPrecio(num) {
   }).format(num);
 }
 
-/* ===== Renderizar productos ===== */
+
 function renderProductos() {
   if (catalogError) {
     productsGrid.innerHTML = `<p class="no-results">${catalogError}</p>`;
@@ -142,7 +141,6 @@ function renderProductos() {
   });
 }
 
-/* ===== Carrito ===== */
 function añadirAlCarrito(id) {
   const producto = productos.find(p => p.id === id);
   if (!producto) return;
@@ -248,7 +246,6 @@ function finalizarCompra() {
   cerrarCarrito();
 }
 
-/* ===== Filtros ===== */
 document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
@@ -272,7 +269,6 @@ searchInput.addEventListener('input', () => {
   renderProductos();
 });
 
-/* ===== Navegación móvil ===== */
 const nav = document.querySelector('.nav');
 btnMenu.addEventListener('click', () => {
   nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
@@ -288,13 +284,11 @@ btnMenu.addEventListener('click', () => {
   }
 });
 
-/* ===== Eventos carrito ===== */
 btnCart.addEventListener('click', abrirCarrito);
 btnCloseCart.addEventListener('click', cerrarCarrito);
 cartOverlay.addEventListener('click', cerrarCarrito);
 btnCheckout.addEventListener('click', finalizarCompra);
 
-/* ===== Inicio ===== */
 (async function iniciar() {
   productsGrid.innerHTML = '<p class="no-results">Cargando catálogo...</p>';
   try {
