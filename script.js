@@ -14,6 +14,12 @@ const ETIQUETAS_CATEGORIA = {
 
 const CATEGORIAS_CON_PLATAFORMA = ['juego'];
 
+const ADMIN_USUARIO = 'administrador';
+const ADMIN_CLAVE = 'Ucroxx';
+const ADMIN_SESSION_KEY = 'gamehub_admin';
+const USERS_STORAGE_KEY = 'gamehub_usuarios';
+const USER_SESSION_KEY = 'gamehub_user';
+
 let productos = [];
 let catalogError = null;
 let soportaColumnaEmoji = false;
@@ -102,6 +108,204 @@ const productPlataforma = document.getElementById('productPlataforma');
 const btnCloseProductModal = document.getElementById('btnCloseProductModal');
 const btnCancelProduct = document.getElementById('btnCancelProduct');
 const btnSubmitProduct = document.getElementById('btnSubmitProduct');
+const btnAdminLogin = document.getElementById('btnAdminLogin');
+const btnAdminLogout = document.getElementById('btnAdminLogout');
+const adminModalOverlay = document.getElementById('adminModalOverlay');
+const adminForm = document.getElementById('adminForm');
+const adminFormError = document.getElementById('adminFormError');
+const btnCloseAdminModal = document.getElementById('btnCloseAdminModal');
+const btnCancelAdmin = document.getElementById('btnCancelAdmin');
+const btnUserLogin = document.getElementById('btnUserLogin');
+const btnUserRegister = document.getElementById('btnUserRegister');
+const btnUserLogout = document.getElementById('btnUserLogout');
+const userGreeting = document.getElementById('userGreeting');
+const loginModalOverlay = document.getElementById('loginModalOverlay');
+const registerModalOverlay = document.getElementById('registerModalOverlay');
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+const loginFormError = document.getElementById('loginFormError');
+const registerFormError = document.getElementById('registerFormError');
+const btnCloseLoginModal = document.getElementById('btnCloseLoginModal');
+const btnCloseRegisterModal = document.getElementById('btnCloseRegisterModal');
+const btnCancelLogin = document.getElementById('btnCancelLogin');
+const btnCancelRegister = document.getElementById('btnCancelRegister');
+const linkToRegister = document.getElementById('linkToRegister');
+const linkToLogin = document.getElementById('linkToLogin');
+
+function obtenerUsuariosRegistrados() {
+  try {
+    const data = localStorage.getItem(USERS_STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch {
+    return [];
+  }
+}
+
+function guardarUsuariosRegistrados(usuarios) {
+  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(usuarios));
+}
+
+function obtenerUsuarioSesion() {
+  try {
+    const data = sessionStorage.getItem(USER_SESSION_KEY);
+    return data ? JSON.parse(data) : null;
+  } catch {
+    return null;
+  }
+}
+
+function esUsuarioLogueado() {
+  return obtenerUsuarioSesion() !== null;
+}
+
+function actualizarUIUsuario() {
+  const usuario = obtenerUsuarioSesion();
+  const logueado = usuario !== null;
+  btnUserLogin.hidden = logueado;
+  btnUserRegister.hidden = logueado;
+  btnUserLogout.hidden = !logueado;
+  userGreeting.hidden = !logueado;
+  if (logueado) {
+    userGreeting.textContent = `Hola, ${usuario.nombre.split(' ')[0]}`;
+  }
+}
+
+function abrirModalLogin() {
+  loginForm.reset();
+  loginFormError.hidden = true;
+  cerrarModalRegister();
+  loginModalOverlay.classList.add('open');
+  loginModalOverlay.setAttribute('aria-hidden', 'false');
+  document.getElementById('loginEmail').focus();
+}
+
+function cerrarModalLogin() {
+  loginModalOverlay.classList.remove('open');
+  loginModalOverlay.setAttribute('aria-hidden', 'true');
+  loginFormError.hidden = true;
+}
+
+function abrirModalRegister() {
+  registerForm.reset();
+  registerFormError.hidden = true;
+  cerrarModalLogin();
+  registerModalOverlay.classList.add('open');
+  registerModalOverlay.setAttribute('aria-hidden', 'false');
+  document.getElementById('registerNombre').focus();
+}
+
+function cerrarModalRegister() {
+  registerModalOverlay.classList.remove('open');
+  registerModalOverlay.setAttribute('aria-hidden', 'true');
+  registerFormError.hidden = true;
+}
+
+function iniciarSesionUsuario(event) {
+  event.preventDefault();
+  const email = loginForm.email.value.trim().toLowerCase();
+  const clave = loginForm.password.value;
+  const usuarios = obtenerUsuariosRegistrados();
+  const usuario = usuarios.find(u => u.email === email && u.clave === clave);
+
+  if (!usuario) {
+    loginFormError.textContent = 'Correo o contraseña incorrectos.';
+    loginFormError.hidden = false;
+    return;
+  }
+
+  sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify({
+    nombre: usuario.nombre,
+    email: usuario.email
+  }));
+  cerrarModalLogin();
+  actualizarUIUsuario();
+}
+
+function registrarUsuario(event) {
+  event.preventDefault();
+  const nombre = registerForm.nombre.value.trim();
+  const email = registerForm.email.value.trim().toLowerCase();
+  const clave = registerForm.password.value;
+  const confirmar = registerForm.passwordConfirm.value;
+
+  if (clave.length < 4) {
+    registerFormError.textContent = 'La contraseña debe tener al menos 4 caracteres.';
+    registerFormError.hidden = false;
+    return;
+  }
+  if (clave !== confirmar) {
+    registerFormError.textContent = 'Las contraseñas no coinciden.';
+    registerFormError.hidden = false;
+    return;
+  }
+
+  const usuarios = obtenerUsuariosRegistrados();
+  if (usuarios.some(u => u.email === email)) {
+    registerFormError.textContent = 'Este correo ya está registrado.';
+    registerFormError.hidden = false;
+    return;
+  }
+
+  usuarios.push({ nombre, email, clave });
+  guardarUsuariosRegistrados(usuarios);
+  sessionStorage.setItem(USER_SESSION_KEY, JSON.stringify({ nombre, email }));
+  cerrarModalRegister();
+  actualizarUIUsuario();
+}
+
+function cerrarSesionUsuario() {
+  sessionStorage.removeItem(USER_SESSION_KEY);
+  actualizarUIUsuario();
+}
+
+function esAdmin() {
+  return sessionStorage.getItem(ADMIN_SESSION_KEY) === '1';
+}
+
+function actualizarUIAdmin() {
+  const admin = esAdmin();
+  btnAddProduct.hidden = !admin;
+  btnAdminLogin.hidden = admin;
+  btnAdminLogout.hidden = !admin;
+}
+
+function abrirModalAdmin() {
+  adminForm.reset();
+  adminFormError.hidden = true;
+  adminModalOverlay.classList.add('open');
+  adminModalOverlay.setAttribute('aria-hidden', 'false');
+  document.getElementById('adminUsuario').focus();
+}
+
+function cerrarModalAdmin() {
+  adminModalOverlay.classList.remove('open');
+  adminModalOverlay.setAttribute('aria-hidden', 'true');
+  adminFormError.hidden = true;
+}
+
+function iniciarSesionAdmin(event) {
+  event.preventDefault();
+  const usuario = adminForm.usuario.value.trim();
+  const clave = adminForm.password.value;
+
+  if (usuario === ADMIN_USUARIO && clave === ADMIN_CLAVE) {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, '1');
+    cerrarModalAdmin();
+    actualizarUIAdmin();
+    renderProductos();
+    return;
+  }
+
+  adminFormError.textContent = 'Usuario o contraseña incorrectos.';
+  adminFormError.hidden = false;
+}
+
+function cerrarSesionAdmin() {
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  cerrarModalProducto();
+  actualizarUIAdmin();
+  renderProductos();
+}
 
 
 function formatoPrecio(num) {
@@ -168,6 +372,7 @@ function renderProductos() {
           ${precioTexto}
         </p>
         <button type="button" class="btn-add" data-id="${p.id}" ${p.precio === 0 ? 'disabled' : ''}>${p.precio === 0 ? 'Gratis' : 'Añadir al carrito'}</button>
+        ${esAdmin() ? `<button type="button" class="btn-delete" data-id="${p.id}">Eliminar</button>` : ''}
       </div>
     `;
     productsGrid.appendChild(card);
@@ -175,6 +380,10 @@ function renderProductos() {
 
   document.querySelectorAll('.btn-add').forEach(btn => {
     btn.addEventListener('click', () => añadirAlCarrito(parseInt(btn.dataset.id, 10)));
+  });
+
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', () => eliminarProducto(parseInt(btn.dataset.id, 10)));
   });
 }
 
@@ -351,7 +560,37 @@ function mostrarErrorModal(mensaje) {
   productFormError.hidden = !mensaje;
 }
 
+async function eliminarProducto(id) {
+  if (!esAdmin()) return;
+  const producto = productos.find(p => p.id === id);
+  if (!producto) return;
+  if (!confirm(`¿Eliminar "${producto.nombre}"?`)) return;
+
+  const supabase = headersSupabase();
+  if (!supabase) return;
+
+  try {
+    const res = await fetch(`${supabase.config.base}/rest/v1/productos?id=eq.${id}`, {
+      method: 'DELETE',
+      headers: supabase.headers
+    });
+    if (!res.ok) {
+      const detail = await res.text();
+      throw new Error(detail || res.statusText);
+    }
+    await cargarProductos();
+    renderProductos();
+  } catch (err) {
+    console.error(err);
+    alert('No se pudo eliminar el producto. Revisa los permisos DELETE en Supabase.');
+  }
+}
+
 function abrirModalProducto() {
+  if (!esAdmin()) {
+    abrirModalAdmin();
+    return;
+  }
   productForm.reset();
   mostrarErrorModal('');
   const categoriaInicial = ['consola', 'juego', 'accesorio'].includes(filtroActual)
@@ -376,6 +615,10 @@ function cerrarModalProducto() {
 
 async function guardarProducto(event) {
   event.preventDefault();
+  if (!esAdmin()) {
+    mostrarErrorModal('Debes iniciar sesión como administrador.');
+    return;
+  }
   mostrarErrorModal('');
 
   const supabase = headersSupabase('return=representation');
@@ -507,6 +750,34 @@ cartOverlay.addEventListener('click', cerrarCarrito);
 btnCheckout.addEventListener('click', finalizarCompra);
 
 btnAddProduct.addEventListener('click', abrirModalProducto);
+btnUserLogin.addEventListener('click', abrirModalLogin);
+btnUserRegister.addEventListener('click', abrirModalRegister);
+btnUserLogout.addEventListener('click', cerrarSesionUsuario);
+btnCloseLoginModal.addEventListener('click', cerrarModalLogin);
+btnCloseRegisterModal.addEventListener('click', cerrarModalRegister);
+btnCancelLogin.addEventListener('click', cerrarModalLogin);
+btnCancelRegister.addEventListener('click', cerrarModalRegister);
+loginForm.addEventListener('submit', iniciarSesionUsuario);
+registerForm.addEventListener('submit', registrarUsuario);
+linkToRegister.addEventListener('click', abrirModalRegister);
+linkToLogin.addEventListener('click', abrirModalLogin);
+
+loginModalOverlay.addEventListener('click', (e) => {
+  if (e.target === loginModalOverlay) cerrarModalLogin();
+});
+registerModalOverlay.addEventListener('click', (e) => {
+  if (e.target === registerModalOverlay) cerrarModalRegister();
+});
+
+btnAdminLogin.addEventListener('click', abrirModalAdmin);
+btnAdminLogout.addEventListener('click', cerrarSesionAdmin);
+btnCloseAdminModal.addEventListener('click', cerrarModalAdmin);
+btnCancelAdmin.addEventListener('click', cerrarModalAdmin);
+adminForm.addEventListener('submit', iniciarSesionAdmin);
+
+adminModalOverlay.addEventListener('click', (e) => {
+  if (e.target === adminModalOverlay) cerrarModalAdmin();
+});
 btnCloseProductModal.addEventListener('click', cerrarModalProducto);
 btnCancelProduct.addEventListener('click', cerrarModalProducto);
 productForm.addEventListener('submit', guardarProducto);
@@ -517,9 +788,11 @@ productModalOverlay.addEventListener('click', (e) => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && productModalOverlay.classList.contains('open')) {
-    cerrarModalProducto();
-  }
+  if (e.key !== 'Escape') return;
+  if (loginModalOverlay.classList.contains('open')) cerrarModalLogin();
+  else if (registerModalOverlay.classList.contains('open')) cerrarModalRegister();
+  else if (adminModalOverlay.classList.contains('open')) cerrarModalAdmin();
+  else if (productModalOverlay.classList.contains('open')) cerrarModalProducto();
 });
 
 (async function iniciar() {
@@ -531,6 +804,8 @@ document.addEventListener('keydown', (e) => {
     catalogError = 'No se pudo cargar el catálogo. Revisa la consola, el SQL en Supabase y supabase-config.js.';
     productos = [];
   }
+  actualizarUIUsuario();
+  actualizarUIAdmin();
   renderProductos();
   actualizarCarritoUI();
 })();

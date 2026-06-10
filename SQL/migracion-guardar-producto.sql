@@ -28,3 +28,12 @@ create policy "productos_insert_publico"
   for insert
   to anon, authenticated
   with check (true);
+
+drop policy if exists "productos_delete_publico" on public.productos;
+create policy "productos_delete_publico"
+  on public.productos
+  for delete
+  to anon, authenticated
+  using (true);
+
+grant delete on table public.productos to anon, authenticated;

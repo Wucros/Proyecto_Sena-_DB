@@ -253,6 +253,129 @@ img {
   white-space: nowrap;
 }
 
+.btn-auth {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn-auth:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.btn-auth--primary {
+  color: var(--bg-dark);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-auth--primary:hover {
+  background: var(--accent-dim);
+  color: var(--bg-dark);
+}
+
+.btn-auth--out {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+.user-greeting {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent);
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.form-switch {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.form-link {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.form-link:hover {
+  color: var(--accent-dim);
+}
+
+@media (max-width: 640px) {
+  .btn-auth {
+    padding: 0.4rem 0.55rem;
+    font-size: 0.75rem;
+  }
+
+  .user-greeting {
+    display: none !important;
+  }
+}
+
+.btn-admin {
+  padding: 0.45rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+
+.btn-admin:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-admin--out {
+  color: var(--bg-dark);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.btn-admin--out:hover {
+  background: var(--accent-dim);
+}
+
+.btn-delete {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #ff8a8a;
+  background: transparent;
+  border: 1px solid rgba(255, 80, 80, 0.35);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition);
+}
+
+.btn-delete:hover {
+  color: #fff;
+  background: rgba(255, 80, 80, 0.25);
+  border-color: #ff8a8a;
+}
+
+.modal--sm {
+  max-width: 400px;
+}
+
 .btn-secondary {
   background: var(--bg-card-hover);
   color: var(--text);

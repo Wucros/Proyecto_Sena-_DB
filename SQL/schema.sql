@@ -33,7 +33,14 @@ create policy "productos_insert_publico"
   with check (true);
 
 grant usage on schema public to anon, authenticated;
-grant select, insert on table public.productos to anon, authenticated;
+drop policy if exists "productos_delete_publico" on public.productos;
+create policy "productos_delete_publico"
+  on public.productos
+  for delete
+  to anon, authenticated
+  using (true);
+
+grant select, insert, delete on table public.productos to anon, authenticated;
 
 -- Migración: columnas y categorías en tablas ya creadas
 alter table public.productos

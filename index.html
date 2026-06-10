@@ -23,6 +23,12 @@
       
     </nav>
     <div class="header-actions">
+      <span class="user-greeting" id="userGreeting" hidden></span>
+      <button type="button" class="btn-auth" id="btnUserLogin">Iniciar sesión</button>
+      <button type="button" class="btn-auth btn-auth--primary" id="btnUserRegister">Registrarse</button>
+      <button type="button" class="btn-auth btn-auth--out" id="btnUserLogout" hidden>Cerrar sesión</button>
+      <button type="button" class="btn-admin" id="btnAdminLogin" aria-label="Acceso administrador">🔐 Admin</button>
+      <button type="button" class="btn-admin btn-admin--out" id="btnAdminLogout" hidden aria-label="Cerrar sesión admin">Salir</button>
       <button type="button" class="btn-cart" id="btnCart" aria-label="Ver carrito">
         <span class="cart-icon">🛒</span>
         <span class="cart-count" id="cartCount">0</span>
@@ -44,7 +50,7 @@
     <section class="filters" id="productos">
       <div class="filters-header">
         <h2 class="section-title">Catálogo</h2>
-        <button type="button" class="btn btn-primary btn-add-product" id="btnAddProduct">+ Agregar producto</button>
+        <button type="button" class="btn btn-primary btn-add-product admin-only" id="btnAddProduct" hidden>+ Agregar producto</button>
       </div>
       <div class="filter-buttons">
         <button type="button" class="filter-btn active" data-filter="todos">Todos</button>
@@ -86,6 +92,88 @@
     </div>
   </aside>
   <div class="cart-overlay" id="cartOverlay" aria-hidden="true"></div>
+
+  <div class="modal-overlay" id="loginModalOverlay" aria-hidden="true">
+    <div class="modal modal--sm" id="loginModal" role="dialog" aria-labelledby="loginModalTitle" aria-modal="true">
+      <div class="modal-header">
+        <h2 id="loginModalTitle">Iniciar sesión</h2>
+        <button type="button" class="btn-close" id="btnCloseLoginModal" aria-label="Cerrar">&times;</button>
+      </div>
+      <form class="modal-form" id="loginForm" novalidate>
+        <div class="form-group">
+          <label for="loginEmail">Correo electrónico</label>
+          <input type="email" id="loginEmail" name="email" class="form-input" required autocomplete="email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" name="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <p class="form-message form-message--error" id="loginFormError" hidden></p>
+        <p class="form-switch">¿No tienes cuenta? <button type="button" class="form-link" id="linkToRegister">Regístrate aquí</button></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btnCancelLogin">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="registerModalOverlay" aria-hidden="true">
+    <div class="modal modal--sm" id="registerModal" role="dialog" aria-labelledby="registerModalTitle" aria-modal="true">
+      <div class="modal-header">
+        <h2 id="registerModalTitle">Crear cuenta</h2>
+        <button type="button" class="btn-close" id="btnCloseRegisterModal" aria-label="Cerrar">&times;</button>
+      </div>
+      <form class="modal-form" id="registerForm" novalidate>
+        <div class="form-group">
+          <label for="registerNombre">Nombre completo</label>
+          <input type="text" id="registerNombre" name="nombre" class="form-input" required maxlength="80" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+          <label for="registerEmail">Correo electrónico</label>
+          <input type="email" id="registerEmail" name="email" class="form-input" required autocomplete="email" placeholder="tu@correo.com">
+        </div>
+        <div class="form-group">
+          <label for="registerPassword">Contraseña</label>
+          <input type="password" id="registerPassword" name="password" class="form-input" required minlength="4" autocomplete="new-password" placeholder="Mínimo 4 caracteres">
+        </div>
+        <div class="form-group">
+          <label for="registerPasswordConfirm">Confirmar contraseña</label>
+          <input type="password" id="registerPasswordConfirm" name="passwordConfirm" class="form-input" required minlength="4" autocomplete="new-password" placeholder="Repite la contraseña">
+        </div>
+        <p class="form-message form-message--error" id="registerFormError" hidden></p>
+        <p class="form-switch">¿Ya tienes cuenta? <button type="button" class="form-link" id="linkToLogin">Inicia sesión</button></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btnCancelRegister">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Registrarse</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="adminModalOverlay" aria-hidden="true">
+    <div class="modal modal--sm" id="adminModal" role="dialog" aria-labelledby="adminModalTitle" aria-modal="true">
+      <div class="modal-header">
+        <h2 id="adminModalTitle">Acceso administrador</h2>
+        <button type="button" class="btn-close" id="btnCloseAdminModal" aria-label="Cerrar">&times;</button>
+      </div>
+      <form class="modal-form" id="adminForm" novalidate>
+        <div class="form-group">
+          <label for="adminUsuario">Usuario</label>
+          <input type="text" id="adminUsuario" name="usuario" class="form-input" required autocomplete="username" placeholder="administrador">
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Contraseña</label>
+          <input type="password" id="adminPassword" name="password" class="form-input" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <p class="form-message form-message--error" id="adminFormError" hidden></p>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="btnCancelAdmin">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Ingresar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <div class="modal-overlay" id="productModalOverlay" aria-hidden="true">
     <div class="modal" id="productModal" role="dialog" aria-labelledby="productModalTitle" aria-modal="true">
