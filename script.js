@@ -154,10 +154,6 @@ function obtenerUsuarioSesion() {
   }
 }
 
-function esUsuarioLogueado() {
-  return obtenerUsuarioSesion() !== null;
-}
-
 function actualizarUIUsuario() {
   const usuario = obtenerUsuarioSesion();
   const logueado = usuario !== null;
